@@ -5,7 +5,10 @@ class plane
     public double y;
     public double z;
     public double velocity;
-  //  public int accel;
+    public double accel;
+    public double Dtraveled;
+    public double Vno;
+    public double stall;
 
     public plane (String planeName, double x, double y, double velocity)
     {
@@ -14,6 +17,9 @@ class plane
         this.y = y;
         z = 1000;
         this.velocity = velocity;
+        Dtraveled = velocity + accel;
+        Vno = 10830;
+        stall = 4860; // clean, landing config is 4354.5
     }
 
     public String toString()
