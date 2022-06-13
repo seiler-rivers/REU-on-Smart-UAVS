@@ -7,4 +7,3 @@ code code code
 '''
 1. nested list
   - list
-    -list 
