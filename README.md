@@ -1,9 +1,181 @@
 # UAV Collision Avoidance Tactics in an Uncontrolled Airport Traffic Pattern
 
-This is where our readme will go
+## Problem Description:
+  The goal of this project is to create a 3D simulation of a UAV landing at an uncontrolled (non-towered) airport. Four (4) Traffic paths are created based on the two (2) runways at Auburn University Regional Airport, and a 3D flight simulation is conducted based on Cessna 150 flight performance. The UAV flies the correct path given a runway, avoids collision with other aircraft, and adjusts for wind displacement in-flight.
+
+## Program Specification and Outline of Classes 
+In this project, a "plane" is constructed with an initial position and velocity, given a runway, and set up to fly the coded path.
+
+#### Classes used:
+* Node.java
+* Queue.java
+* plane.java
+* runway.java
+* QueueException
+* airport.java
+
+### Node.java
+This node class forms the building blocks of the Queue class
+
+Constructs nodes and forms a linked list that will be used to create a queue
+
+### Queue.java
+This is a First In, First Out (FIFO) algorithm that is made from a circular linked list using the Node class
+
+* isEmpty() determines if last node is null (if queue is empty)
+* DequeueAll()  makes last node null
+* Enqueue() adds a node and makes the linked list circular
+* Dequeue() removes last item in queue, 3 cases: if queue is empty return error message, if there is one item in queue, and if there is more than one item in queue
+* Peek() and front() method to look at/get front item
+* clone() method to copy queue, throw clonenotsupportedexception
+
+### plane.java
+This is a class to store attributes of each aircraft in the pattern.
+
+A plane is constructed with a name, x position, y position, and initial velocity.
+Assuming the plane starts on the 45, height is initialized to 1000 ft.
+
+Stall speed and the max speed of normal operation is pre-defined in this class according to the Cessna 150.
+
+### runway.java
+This is a class to store calculations for each essential point in the landing pattern.
+
+An x and y variable is declared for every "turning point" in the pattern (wherever an aircraft would make a significant adjustment to the flight path, ie making a 90 degree turn to another leg or reaching the landing point)
+
+* A runway is constructed with a heading, length, and X and Y positions for both ends of the runway.
+* The runway is extended 3500 feet on each side to find the start of the crosswind and final legs
+* Two lines extending 3500 feet perpendicular to the ends of the runway form the start of the base and downind
+* The point 3500 feet perpendicular to the midpoint of the runway is the end of the 45 leg
+* The downwind line (parallel to the runway) rotated 45 degrees counterclockwise and shortened to be 5280 feet is the start of the 45
+* The point on the downwind leg directly across from end of runway is the point "abeam" the numbers
+* The point on the runway 500 feet from the end is the touchdown point
+
+Two methods are added in this class to compute a new x and y position given a start point, end point, and distance along a vector. These methods essentially use vector calculus to calculate a new point a certain length along a vector.
+
+
+## Algorithm Design
+
+What follows is an outline of the algorithm approach to the airport client file:
+
+* a Queue is constructed to store legs of flight
+* an array of plane classes to store each plane
+* global clock int
+* for each clock pulse, update position of each plane
+* if time to turn a leg, dequeue the Leg Queue and update position according to new leg
+* position data is output to a file containing the runway name
+
+#### makeQueue()
+ A method to construct a queue of each leg in pattern
+ 
+#### makeRunway()
+  A method to construct an object of the runway class
+ - The user enters the heading of the runway in use, if invalid runway, error message is thrown
+ - A switch statement with cases of each runway heading initialized the characteristcs of the runway object
+ 
+#### makePlane()
+A method to construct plane object(s) and add to the plane aray.
+
+If more planes are to be added to the program, they would be constructed in this method.
+
+#### run()
+A method to increase plane positions with each clock pulse and open the file that will contain the output data
+- a FileWriter and BufferedWriter object is used to output the file heading, formatted into columns with String.format
+- the legQueue is constructed along with a clone for every other plane in the plane array
+- While the clock is less than 40 (number may be changed to edit length of simulation), each plane's position is updated.
+- the second plane's position is updated after 10 clock pules (may be changed to edit when plane 2 begins)
+
+#### changeLeg()
+A method to switch legs in the pattern once plane has reached correct position
+
+if Queue is Empty
+  - make a new Queue
+  - dequeue from Queue to remove 45
+  - increase Position
+
+else if passed the (runway leg) End point
+  - calculate distance from end point to current position
+  - this distance shows how far from path the plane is
+  - find new point along next leg given distance overshot
+  - dequeue to move onto next leg
+  - increase Position
+
+"""
+
+else
+  - increase position if not done with any leg
+
+#### passed()
+A boolean method to determine if the turning point on a leg has been passed
+  - Called in changeLeg method during if statements
+  - returns true if turning point has been passed
+  - checks each direction based on runway in use
+
+if ( leg ) // check each turn point of each leg
+
+    switch ( runway heading )
+    
+          case 29:
+          case 36:
+                if passed condition
+                    passed = true
+          case 11:
+          case 18:
+              if passed condition
+                  passed = true
+
+return passed
+
+#### increasePos()
+A method to update plane position beased on current leg and write out position to file
+- construct FileWriter and BufferedWriter objects
+- construct DecimalFormat object to format output
+- format output string into columns using String.format
+
+if queue is empty
+    return
+    
+Switch( current leg )
+    case leg:
+        write out position to file
+        call newPoint method to update position
+        Accelleration is added to velocity considering current velocity, distance to end leg, and end leg velocity
+        current position, end of leg position, distance to go = new velocity
+        return
+        
+repeat for each leg
+
+#### newPoint()
+A method to determine a new point a certain distance along a vector
+- vector end position - start position
+- calculate norm
+- new position is (distance to go * (vector/norm)) + start position
+- update plane position
+
+#### accel()
+A method to calculate acceleration needed based on position, end of vector, and velocity desired at end of vector
+- distance formula used to calculate distacne to end of vector
+- velocity equation: final velocity squared = initial velocity squared + 2 * acceleration * distance
+- given intial velocity and distance to end of vector, return acceleration
+         
+
+
+  
+ 
+  
+  
 
 
 
+
+
+
+
+
+
+
+
+
+## Bios
 Seiler Rivers is a sophomore computer science student at Mercer University. As one of ten students to earn AOPA’s national scholarship to obtain her private pilot’s license, her love of aviation and computer science led her to research UAVs. She also is double majoring in music and is a self-proclaimed pianist, programmer, and pilot. Upon graduating, Seiler hopes to earn her master’s in Computer Science and eventually work as a software engineer.
 
 
