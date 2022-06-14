@@ -168,16 +168,22 @@ For GnuPlot documentation, visit http://www.gnuplot.info/docs_5.4/Gnuplot_5_4.pd
 ### Step-by-Step Installation:
 
   1. Open the terminal to install Homebrew
-  2. Copy and paste the following in the command line: /bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+ 
+  2. Copy and paste the following in the command line: 
+/bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         
-        To check if Homebrew is already installed, type this command in the terminal:
-            brew --version
-            
-            
+  To check if Homebrew is already installed, type this command in the terminal. This will give the version of Homebrew that is installed on your Mac.
+brew --version
+  
   3. Next is to install gnuplot. Type the following command:
-            brew install gnuplot
-  4. To see if gnuplot is installed, type the following command in the terminal. This will list the installed items on your Mac. Here, you should see gnuplot as one of the installed items.
-            brew list
+brew install gnuplot
+        
+  4. To see if gnuplot is installed, type the following command in the terminal. This will display a list of the installed items on your Mac. Here, you should see gnuplot as one of the installed items.
+  brew list
+  
+  5. 
+
+  
     
   
 
