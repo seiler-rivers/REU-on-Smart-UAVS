@@ -159,31 +159,26 @@ A method to calculate acceleration needed based on position, end of vector, and 
          
 
 ## Installation Process of GNUPLOT 
-  To visualize the path of the UAVs in the various airport runways, the 3D graphical program, gnuplot, was used. This program allows for 2D and 3D graph rendering of functions and data points. The following will provide a step-by-step process to download the program onto a MacOS system.
+To visualize the path of the UAV in the airport runways, the 3D graphical program, gnuplot, was used. This program allows for 2D and 3D graph rendering of functions and data points. The following will provide a step-by-step process to download the program onto a MacOS system.
 
 ### Step-by-Step Installation:
 
   1. Open the terminal to install Homebrew
  
   2. Copy and paste the following in the command line: 
-
- /bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+> /bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         
-  To check if Homebrew is already installed, type this command in the terminal. This will give the version of Homebrew that is installed on your Mac.
-
- brew --version
+To check if Homebrew is already installed, type this command in the terminal. This will give the version of Homebrew that is installed on your Mac.
+> brew --version
   
   3. Next is to install gnuplot. Type the following command:
-
- brew install gnuplot
+> brew install gnuplot
         
   4. To see if gnuplot is installed, type the following command in the terminal. This will display a list of the installed items on your Mac. Here, you should see gnuplot as one of the installed items.
-  
- brew list
+> brew list
   
   5. Now that gnuplot is installed, run it by typing this in the terminal:
-
- gnuplot
+> gnuplot
 
 The picture below shows GNUPLOT ran in the terminal
 
@@ -191,20 +186,8 @@ The picture below shows GNUPLOT ran in the terminal
 
   
 For a complete guide on how to install Homebrew or for other installation options, visit https://brew.sh
+
 For GnuPlot documentation, visit http://www.gnuplot.info/docs_5.4/Gnuplot_5_4.pdf
-  
-    
-  
-
-
-
-
-
-
-
-
-
-
 
 
 ## Bios
