@@ -1,28 +1,44 @@
-# PlotPoints.txt
-# PATH: /Users/andreacoppi/UAVProject/PlotPoints.txt
-# To draw in gnuplot: splot "/Users/andreacoppi/UAVProject/PlotPoints.txt" with lines
+# Runway 36 Coordinate Points
+# 
 #
-# gnuplot ignores lines starting with #
+# Note: gnuplot ignores lines starting with #
 #
-#  x	 	   y		    z	
-#---------------------------------------------	
-# Runway 36 
+# To draw 3D Graph: > splot "ENTER THE PATH TO THE TEXT FILE PLOTPOINTS.TXT HERE" using 1:2:3 with linespoint lc 'blue' title "UAV Path",
+#                     "ENTER THE PATH TO THE TEXT FILE PLOTPOINTS.TXT HERE" using 4:5:6 with lines lw 5 lc 'black' title "Landing Strip"
 #
-# set xrange [-5000:11000]
-# set yrange [3000:12000]
-# set zrange [0:1000]
-# set xlabel "X axis"
-# set ylabel "Y axis"
-# set zlabel "Z axis"
+# Commands: 
+# splot                   ----> Renders 3D graph
+# using 1:2:3             ----> Considers the points in columns 1, 2, and 3 as x, y, and z points
+# linespoint              ----> Plots the points with a line connecting the points
+# lc 'blue'               ----> line color 'color'
+# title "UAV Path"        ----> Name of the line as shown in the legend
+# ,                       ----> Draws on the same graph
+# lw 5                    ----> linewidth of size 5 (default is 1)
+#
+# gnuplot will automatically set x, y, and z ranges based on the data, but the following are commands to manually change them as well as # add labels for the axes:
+#
+# Commands:
+# set ticslevel 0         ----> Starts the Z-axis at the bottom of the graph  
+# set xrange [-5000:11000]----> Sets the X-range starting at -5,000 to 11,000
+# set yrange [3000:12000] ----> "   //   Y-range    //        3,000 to 12,000"     
+# set zrange [0:1000]     ----> "   //   Z-range    //        0     to 1,000" 
+# set xlabel "X axis"     ----> Sets the X-axis label as "X axis"
+# set ylabel "Y axis"     ----> "   //   Y-axis   //     'Y axis'"
+# set zlabel "Z axis"     ----> "   //   Z-axis   //     'Z axis'"
 #
 #
+# The following shows how to label a specific point from the data points: 
+# set label 1 "  Start 45" at 6365.52, 11233.5, 1000.00 left point pointtype 3
 #
-#		PLANE 1                 LANDING
+#
+#        PLANE 1               LANDING
+#   x	 	    y		     z	       x  y  z
+#---------------------------------------------
+# Start 45
 6365.524 11233.524 1000.000    0 4000 0
 5234.153 10102.153 1000.000    5264 4000 0
 4102.782 8970.782 1000.000
 2971.411 7839.411 1000.000
-# start downwind
 1512.000 7500.000 1000.000
 76.996 7500.000 1000.000
 # start abeam
