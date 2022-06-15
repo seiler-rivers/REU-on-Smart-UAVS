@@ -1,4 +1,5 @@
 GNUPLOT COMMANDS:
+GNUPLOT documentation can be found here: http://gnuplot.sourceforge.net/docs_4.2/node1.html
 --------------------------------------------------------------------------------------------------
 
 1. To draw 3D Graph: 
