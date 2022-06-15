@@ -12,11 +12,10 @@ public class airport {
         Queue legQueue = new Queue();       //queue of each leg of pattern
         runway runwayArray[] = new runway[10];          //array of runways
         plane planeArray[] = new plane[10];    //array of plane classes
-        double planePos[][] = new double[10][100];//inefficient, empty space???????????????????????????????
 
         makeRunway(runwayArray);
         makePlane(planeArray, runwayArray[0]);
-        run(legQueue, planeArray, runwayArray, planePos);
+        run(legQueue, planeArray, runwayArray);
     }
 
     public static void makeQueue(Queue legQueue){ 
@@ -85,11 +84,8 @@ public class airport {
 
     }
 
-    public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray, double planePos[][]) throws CloneNotSupportedException, IOException
+    public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray) throws CloneNotSupportedException, IOException
     {
-        DecimalFormat df = new DecimalFormat( "#0.000");
-        String x = ""; String y = ""; String z = "";
-        String x2 = ""; String y2 = ""; String z2 = "";
         File file = new File(String.valueOf(runwayArray[0].heading) + "_plot.dat");
         String formatStr = "%-15s %-15s %-15s %-15s %-15s %-15s%n";
         try {
@@ -109,9 +105,7 @@ public class airport {
         {
            changeLeg(legQueue, planeArray[0], runwayArray[0]);
 
-            x = String.valueOf(df.format(planeArray[0].x)); y = String.valueOf(df.format(planeArray[0].y)); z = String.valueOf(df.format(planeArray[0].z));
-
-            /*  if(clock >=5)   //second plane 5 seconds behind
+            /*  if(clock >=10)   //second plane 5 seconds behind
             {
                 changeLeg(clone, planeArray[1], runwayArray[0]);
                 x2 = String.valueOf(df.format(planeArray[1].x)); y2 = String.valueOf(df.format(planeArray[1].y)); z2 = String.valueOf(df.format(planeArray[1].z));
@@ -126,10 +120,9 @@ public class airport {
  
         if(legQueue.isEmpty())
         {
-           // System.out.println("end of queue");
             makeQueue(legQueue);    //start over to keep cycling through
             legQueue.dequeue();
-            increaseTime(legQueue, myRunway, myplane, myRunway);
+            increasePos(legQueue, myRunway, myplane, myRunway);
         }
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "45") //if done with 45
         {
@@ -138,7 +131,7 @@ public class airport {
 
             newPoint(myRunway.end45X, myRunway.end45Y, 1000, myRunway.abeamX, myRunway.abeamY, 1000, d, myplane);
             legQueue.dequeue();
-             increaseTime(legQueue,myRunway, myplane, myRunway);
+             increasePos(legQueue,myRunway, myplane, myRunway);
         }
 
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "downwind") // if done with downwind
@@ -148,7 +141,7 @@ public class airport {
             
             newPoint(myRunway.abeamX, myRunway.abeamY,1000, myRunway.baseX , myRunway.baseY, 700, d, myplane);
             legQueue.dequeue();
-             increaseTime(legQueue, myRunway, myplane, myRunway);
+             increasePos(legQueue, myRunway, myplane, myRunway);
         }
 
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "abeam") // if done with abeam
@@ -158,7 +151,7 @@ public class airport {
 
             newPoint(myRunway.baseX, myRunway.baseY, 700, myRunway.finalX, myRunway.finalY, 400, d, myplane);
             legQueue.dequeue();
-             increaseTime(legQueue, myRunway, myplane, myRunway);
+             increasePos(legQueue, myRunway, myplane, myRunway);
         }
 
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "base") //if done with base
@@ -168,7 +161,7 @@ public class airport {
 
             newPoint(myRunway.finalX, myRunway.finalY, 400, myRunway.touchDownX , myRunway.touchDownY, 0, d, myplane);
             legQueue.dequeue();
-             increaseTime(legQueue, myRunway, myplane, myRunway);
+             increasePos(legQueue, myRunway, myplane, myRunway);
         }
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "final") // if done with final
         {
@@ -178,7 +171,7 @@ public class airport {
             newPoint(myRunway.touchDownX, myRunway.touchDownY, 0, myRunway.crosswindX , myRunway.crosswindY, 700, d, myplane);
 
             legQueue.dequeue();  
-             increaseTime(legQueue, myRunway, myplane, myRunway);
+             increasePos(legQueue, myRunway, myplane, myRunway);
         }
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "upwind") // if done with upwind
         { 
@@ -187,7 +180,7 @@ public class airport {
 
             newPoint(myRunway.crosswindX, myRunway.crosswindY, 700, myRunway.downwindX , myRunway.downwindY, 1000, d, myplane);               
             legQueue.dequeue();
-            increaseTime(legQueue, myRunway, myplane, myRunway);
+            increasePos(legQueue, myRunway, myplane, myRunway);
         }
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "crosswind")    //if done with crosswind
         {
@@ -196,10 +189,10 @@ public class airport {
 
             newPoint(myRunway.downwindX, myRunway.downwindY, 1000, myRunway.abeamX , myRunway.abeamY, 1000, d, myplane);     
             legQueue.dequeue(); 
-            increaseTime(legQueue,myRunway, myplane, myRunway);
+            increasePos(legQueue,myRunway, myplane, myRunway);
         }
         else {
-            increaseTime(legQueue, myRunway, myplane, myRunway);   //if not done with any leg, increase time and update position
+            increasePos(legQueue, myRunway, myplane, myRunway);   //if not done with any leg, increase time and update position
         }
     }
 
@@ -326,8 +319,8 @@ public class airport {
         return s;
     }
 
-    public static void increaseTime(Queue legQueue, runway mRunway, plane myplane, runway myRunway)  //must update to account for diagonal legs
-    {   //method to update position base on current leg and increase clock
+    public static void increasePos(Queue legQueue, runway mRunway, plane myplane, runway myRunway) 
+    {   //method to update position base on current leg 
 
         DecimalFormat df = new DecimalFormat( "#0.000");
         String x = String.valueOf(df.format(myplane.x)); String y = String.valueOf(df.format(myplane.y)); String z = String.valueOf(df.format(myplane.z));
@@ -337,7 +330,6 @@ public class airport {
         try {
             FileWriter fw = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(fw);
-            //bw.write(String.valueOf(legQueue.front()));
 
             if(legQueue.isEmpty())
             {
