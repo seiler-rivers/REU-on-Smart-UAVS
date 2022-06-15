@@ -158,29 +158,45 @@ A method to calculate acceleration needed based on position, end of vector, and 
          
 
 ## Installation Process of GNUPLOT 
-  To visualize the path of the UAVs in the various airport runways, the 3D graphical program, gnuplot, was used. This program allows for 2D and 3D graph rendering of functions and data points. The following will provide a step-by-step process to download the program onto a MacOS system.
- 
- Helpful links:
-For a complete guide on how to install Homebrew or for other installation options, visit https://brew.sh
-For GnuPlot documentation, visit http://www.gnuplot.info/docs_5.4/Gnuplot_5_4.pdf
+To visualize the path of the UAV in the airport runways, the 3D graphical program, gnuplot, was used. This program allows for 2D and 3D graph rendering of functions and data points. The following will provide a step-by-step process to download the program onto a MacOS system.
 
 ### Step-by-Step Installation:
 
   1. Open the terminal to install Homebrew
  
   2. Copy and paste the following in the command line: 
-/bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+> /bin/bash-c"$(curl-fsSLhttps://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         
-  To check if Homebrew is already installed, type this command in the terminal. This will give the version of Homebrew that is installed on your Mac.
-brew --version
+To check if Homebrew is already installed, type this command in the terminal. This will give the version of Homebrew that is installed on your Mac.
+> brew --version
   
   3. Next is to install gnuplot. Type the following command:
-brew install gnuplot
+> brew install gnuplot
         
   4. To see if gnuplot is installed, type the following command in the terminal. This will display a list of the installed items on your Mac. Here, you should see gnuplot as one of the installed items.
-  brew list
+> brew list
   
-  5. 
+  5. Now that gnuplot is installed, run it by typing this in the terminal:
+> gnuplot
+
+The picture below shows GNUPLOT ran in the terminal
+
+<img width="444" alt="gnuPlotSucessfulInstallation" src="https://user-images.githubusercontent.com/83298742/173807641-8dd7c4dc-27b8-4ef0-8b57-5f66d8e17ecb.png">
+
+  
+For a complete guide on how to install Homebrew or for other installation options, visit https://brew.sh
+
+For GnuPlot documentation, visit http://www.gnuplot.info/docs_5.4/Gnuplot_5_4.pdf
+
+
+## Bios
+Seiler Rivers is a sophomore computer science student at Mercer University. As one of ten students to earn AOPA’s national scholarship to obtain her private pilot’s license, her love of aviation and computer science led her to research UAVs. She also is double majoring in music and is a self-proclaimed pianist, programmer, and pilot. Upon graduating, Seiler hopes to earn her master’s in Computer Science and eventually work as a software engineer.
+
+
+Andrea Coppi is from Fort Worth, Texas, and attends the University of Dallas. She is a rising junior computer science and business double major. After high school, she attended a nearby community college, Tarrant County College, and competed in the Jim Bolen Math Competiton. As a result, received a full tuition scholarship to the private university. She is part of the university’s soccer team and programming team. After graduating, she plans to further her education and attain a master’s degree in cybersecurity.
+
+
+
 
   
    
