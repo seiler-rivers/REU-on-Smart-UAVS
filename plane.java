@@ -1,3 +1,4 @@
+
 class plane
 {
     public String planeName;
@@ -7,27 +8,31 @@ class plane
     public double velocity;
     public double accel;
     public double Dtraveled;
-    public double Vno;
-    public double stall;
+    public double Vno;  //normal operating range
+    public double Vso;  //power off stall, landing configuration
+    public double Vfe;  //max flaps extended speed
 
-    public plane (String planeName, double x, double y, double velocity)
+    //all airspeed is calibrated airspeed, not indicated
+
+    public plane (String planeName, double x, double y, double Vno, double Vso, Double Vfe)
     {
         this.planeName = planeName;
         this.x = x;
         this.y = y;
         z = 1000;
-        this.velocity = velocity;
+        this.Vno = Vno;
+        velocity = Vno;
         Dtraveled = velocity + accel;
-        Vno = 10830;
-        stall = 4860; // clean, landing config is 4354.5
+        this.Vso = Vso; 
+        this.Vfe = Vfe;
     }
 
     public String toString()
     {
     return (planeName + "\t \t" +
             x + "\t" +
-            x + "\t" +
             y + "\t" +
+            z + "\t" +
             velocity); //+ "\t" +
             //turnTime);
     }
