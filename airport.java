@@ -10,7 +10,7 @@ public class airport {
     public static void main(String[]args) throws CloneNotSupportedException, IOException
     {
         Queue legQueue = new Queue();       //queue of each leg of pattern
-        runway runwayArray[] = new runway[10];          //array of runways
+        runway runwayArray[] = new runway[10];          //array of runways --- CHANGE??????
         plane planeArray[] = new plane[10];    //array of plane classes
 
         makeRunway(runwayArray);
@@ -30,7 +30,7 @@ public class airport {
         legQueue.enqueue("crosswind");
     }
 
-    public static void makeRunway(runway [] runwayArray){ 
+    public static void makeRunway(runway [] runwayArray){           ///edit to no runway array and one runway?
         //method to build array of runway classes from user input
         //hardcode instead of user input?
 
@@ -74,24 +74,30 @@ public class airport {
 
         double x = myRunway.start45X;  //start on 45
         double y = myRunway.start45Y;
-        double velocity = 1600;
+        double Vno = 212.664; double Vso = 74.264; double Vfe = 145.152;    //c172
+        double Vno2 = 175.532; double Vso2 = 70.888; double Vfe2 = 150.215; //c150
 
-        plane plane1 = new plane("1", x, y, velocity);
-        planeArray[0] = plane1;
+        /*Scanner in = new Scanner(System.in);
+        if(in.nextLine()=="c172")
+            Vno = 212.664; Vso = 74.264; Vfe = 145.152;
+        if(in.nextLine() == "c150")
+            Vno2 = 175.532; Vso2 = 70.888; Vfe2 = 150.215;*/
 
-        plane plane2 = new plane("2", x,y,velocity);
-        planeArray[1] = plane2;
+        planeArray[0] = new plane("UAV", x, y, Vno, Vso, Vfe);
+        planeArray[1] = new plane("plane2", x, y, Vno2, Vso2, Vfe2);
 
     }
 
     public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray) throws CloneNotSupportedException, IOException
     {
+        DecimalFormat df = new DecimalFormat( "#0.000");
+        String x2 = ""; String y2 = ""; String z2 = "";
         File file = new File(String.valueOf(runwayArray[0].heading) + "_plot.dat");
         String formatStr = "%-15s %-15s %-15s %-15s %-15s %-15s%n";
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter b = new BufferedWriter(fw);
-            b.write(String.format(formatStr, "#x", "y", "z", "x2", "y2", "z2"));
+            b.write(String.format(formatStr, "#x", "y", "z", "x2", "y2", "z2"));            
             b.newLine();
             b.close();
         } catch (IOException e) {
@@ -99,17 +105,27 @@ public class airport {
         }
 
         makeQueue(legQueue);
-        //Queue clone = (Queue) legQueue.clone();
+        Queue clone = (Queue) legQueue.clone();
 
-        while(clock <=40)
+        while(clock <=400)
         {
-           changeLeg(legQueue, planeArray[0], runwayArray[0]);
+            String x = String.valueOf(df.format(planeArray[0].x)); String y = String.valueOf(df.format(planeArray[0].y)); String z = String.valueOf(df.format(planeArray[0].z));
+            try {
+                FileWriter fw = new FileWriter(runwayArray[0].heading + "_plot.dat", true);
+                BufferedWriter b = new BufferedWriter(fw);
+                b.write(String.format(formatStr, x, y, z, x2, y2, z2));        
+                b.newLine();
+                b.close();
+            } catch (IOException e) {
+                e.getMessage();
+            }
+            changeLeg(legQueue, planeArray[0], runwayArray[0]);
 
-            /*  if(clock >=10)   //second plane 5 seconds behind
+            if(clock >=10)   //second plane 100 seconds behind
             {
                 changeLeg(clone, planeArray[1], runwayArray[0]);
                 x2 = String.valueOf(df.format(planeArray[1].x)); y2 = String.valueOf(df.format(planeArray[1].y)); z2 = String.valueOf(df.format(planeArray[1].z));
-            } */
+            } 
 
             clock++;
         }
@@ -117,7 +133,8 @@ public class airport {
 
     public static void changeLeg(Queue legQueue, plane myplane, runway myRunway){
         //method to switch legs in the pattern once the plane has reached the correct position
- 
+
+
         if(legQueue.isEmpty())
         {
             makeQueue(legQueue);    //start over to keep cycling through
@@ -131,7 +148,7 @@ public class airport {
 
             newPoint(myRunway.end45X, myRunway.end45Y, 1000, myRunway.abeamX, myRunway.abeamY, 1000, d, myplane);
             legQueue.dequeue();
-             increasePos(legQueue,myRunway, myplane, myRunway);
+            increasePos(legQueue,myRunway, myplane, myRunway);
         }
 
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "downwind") // if done with downwind
@@ -151,7 +168,7 @@ public class airport {
 
             newPoint(myRunway.baseX, myRunway.baseY, 700, myRunway.finalX, myRunway.finalY, 400, d, myplane);
             legQueue.dequeue();
-             increasePos(legQueue, myRunway, myplane, myRunway);
+            increasePos(legQueue, myRunway, myplane, myRunway);
         }
 
         else if(passed(myplane, myRunway, legQueue) && legQueue.front() == "base") //if done with base
@@ -192,6 +209,7 @@ public class airport {
             increasePos(legQueue,myRunway, myplane, myRunway);
         }
         else {
+           // System.out.println();
             increasePos(legQueue, myRunway, myplane, myRunway);   //if not done with any leg, increase time and update position
         }
     }
@@ -211,12 +229,12 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.y < myRunway.end45Y)
-                        s=true;
+                        s =  true;
                     break;
                 case 11:
                 case 18:
                     if(myPlane.y > myRunway.end45Y)
-                        s=true;
+                        s = true;
                     break;
             }
         }    
@@ -227,12 +245,12 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.x < myRunway.abeamX)
-                        s=true;
+                        s = true;
                     break;
                 case 11:
                 case 18:
                     if(myPlane.x > myRunway.abeamX)
-                        s=true;
+                        s = true;
                     break;
             }
         }       
@@ -243,12 +261,14 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.x < myRunway.baseX)
-                        s=true;
+                    {
+                        s = true;
+                    }
                     break;
                 case 11:
                 case 18:
                     if(myPlane.x > myRunway.baseX)
-                        s=true;
+                        s = true;
                     break;
             }
         }
@@ -259,12 +279,13 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.y < myRunway.finalY)
-                        s=true;
+                        s = true;
+
                     break;
                 case 11:
                 case 18:
                     if(myPlane.y > myRunway.finalY)
-                        s=true;
+                        s = true;
                     break;
             }
         }
@@ -275,12 +296,12 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.x > myRunway.landX)
-                        s=true;
+                        s = true;
                     break;
                 case 11:
                 case 18:
                     if(myPlane.x < myRunway.landX)
-                        s=true;
+                        s = true;
                     break;
             }
         }
@@ -291,12 +312,12 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.x > myRunway.crosswindX)
-                        s=true;
+                        s = true;
                     break;
                 case 11:
                 case 18:
                     if(myPlane.x < myRunway.crosswindX)
-                        s=true;
+                        s = true;
                     break;
             }
         }
@@ -307,12 +328,12 @@ public class airport {
                 case 29:
                 case 36:
                     if(myPlane.y > myRunway.downwindY)
-                        s=true;
+                        s = true;
                     break;
                 case 11:
                 case 18:
                     if(myPlane.y < myRunway.downwindY)
-                        s=true;
+                        s = true;    
                     break;
             }
         }
@@ -323,92 +344,72 @@ public class airport {
     {   //method to update position base on current leg 
 
         DecimalFormat df = new DecimalFormat( "#0.000");
-        String x = String.valueOf(df.format(myplane.x)); String y = String.valueOf(df.format(myplane.y)); String z = String.valueOf(df.format(myplane.z));
-        String x2 = ""; String y2 = ""; String z2 = "";
-        File file = new File(String.valueOf(myRunway.heading) + "_plot.dat");
-        String formatStr = "%-15s %-15s %-15s %-15s %-15s %-15s%n";
-        try {
-            FileWriter fw = new FileWriter(file, true);
-            BufferedWriter bw = new BufferedWriter(fw);
 
-            if(legQueue.isEmpty())
-            {
-                bw.close();
+        if(legQueue.isEmpty())
+        {
+            return;
+        }
+        String leg = (legQueue.front()).toString();   
+        switch(leg) {           //check what leg currently on, update position and time
+            case "45": 
+                System.out.println("45");
+                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                //  System.out.println("velocity: " + myplane.velocity);
+                //start and end height is 1000
+                //no acceleration on the 45
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.end45X, myRunway.end45Y, 1000, myplane.velocity, myplane);
                 return;
-            }
-            String leg = (legQueue.front()).toString();   
-            switch(leg) {           //check what leg currently on, update position and time
-                case "45": 
-                    System.out.println("45");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    //start and end height is 1000
-                    //no acceleration on the 45
-                    newPoint(myplane.x, myplane.y, 1000, myRunway.end45X, myRunway.end45Y, 1000, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
 
-                case "downwind": 
-                    System.out.println("downwind");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    bw.close(); fw.close();
-                    //start height 1000 at end of 45, end height 1000 abeam numbers
-                    myplane.velocity += accel (myplane.x, myRunway.abeamX, myplane.y, myRunway.abeamY, myplane.velocity, 1434.6);
-                    newPoint(myplane.x, myplane.y, 1000, myRunway.abeamX, myRunway.abeamY, 1000, myplane.velocity, myplane);
-                    return;
+            case "downwind": 
+                System.out.println("downwind");
+                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                // System.out.println("velocity: " + myplane.velocity);
+                //start height 1000 at end of 45, end height 1000 abeam numbers
+                myplane.velocity += accel (myplane.x, myRunway.abeamX, myplane.y, myRunway.abeamY, myplane.velocity, myplane.Vfe);  //vfe
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.abeamX, myRunway.abeamY, 1000, myplane.velocity, myplane);
+                return;
 
-                case "abeam":
-                    System.out.println("abeam");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    //start height 1000 abeam numbers, descned to 700
-                    myplane.velocity += accel (myplane.x, myRunway.baseX, myplane.y, myRunway.baseY, myplane.velocity, 1016);
-                    newPoint(myplane.x, myplane.y, 1000, myRunway.baseX, myRunway.baseY, 700, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
+            case "abeam":
+                System.out.println("abeam");
+                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                // System.out.println("velocity: " + myplane.velocity);
+                //start height 1000 abeam numbers, descned to 700
+                myplane.velocity += accel (myplane.x, myRunway.baseX, myplane.y, myRunway.baseY, myplane.velocity, (1.4 * myplane.Vso));
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.baseX, myRunway.baseY, 700, myplane.velocity, myplane);
+                return;
 
-                case "base":
-                    System.out.println("base");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    myplane.velocity += accel (myplane.x, myRunway.finalX, myplane.y, myRunway.finalY, myplane.velocity, 943.5);
-                    newPoint(myplane.x, myplane.y, 700, myRunway.finalX, myRunway.finalY, 400, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
+            case "base":
+                System.out.println("base");
+                //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                //System.out.println("velocity: " + myplane.velocity);
+                myplane.velocity += accel (myplane.x, myRunway.finalX, myplane.y, myRunway.finalY, myplane.velocity, (1.3 * myplane.Vso));
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.finalX, myRunway.finalY, 400, myplane.velocity, myplane);
+                return;
 
-                case "final":   //NOT FULL STOP, CHECK LANDING VELOCITY
-                    System.out.println("final");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    myplane.velocity += accel (myplane.x, myRunway.touchDownX, myplane.y, myRunway.touchDownY, myplane.velocity, 337.5);
-                    newPoint(myplane.x, myplane.y, 400, myRunway.touchDownX, myRunway.touchDownY, 0, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
+            case "final":   //NOT FULL STOP, CHECK LANDING VELOCITY
+                System.out.println("final");
+                // System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                //System.out.println("velocity: " + myplane.velocity);
+                myplane.velocity += accel (myplane.x, myRunway.touchDownX, myplane.y, myRunway.touchDownY, myplane.velocity, (myplane.Vso * .8));
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.touchDownX, myRunway.touchDownY, 0, myplane.velocity, myplane);
+                return;
 
-                case "upwind":
-                    System.out.println("upwind");
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    myplane.velocity += accel (myplane.x, myRunway.crosswindX, myplane.y, myRunway.crosswindY, myplane.velocity, 1350);
-                    newPoint(myplane.x, myplane.y, 0, myRunway.crosswindX, myRunway.crosswindY, 700, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
+            case "upwind":
+                System.out.println("upwind");
+                //  System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                // System.out.println("velocity: " + myplane.velocity);
+                myplane.velocity += accel (myplane.x, myRunway.crosswindX, myplane.y, myRunway.crosswindY, myplane.velocity,  (.8 * myplane.Vno));
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.crosswindX, myRunway.crosswindY, 700, myplane.velocity, myplane);
+                return;
 
-                case "crosswind":
-                    System.out.println("crosswind");
-                    bw.write(String.format(formatStr, x, y, z, x2, y2, z2));
-                    System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
-                    myplane.velocity += accel (myplane.x, myRunway.downwindX, myplane.y, myRunway.downwindY, myplane.velocity, 1600);
-                    newPoint(myplane.x, myplane.y, 700, myRunway.downwindX, myRunway.downwindY, 1000, myplane.velocity, myplane);
-                    bw.close(); fw.close();
-                    return;
-            }
-        bw.newLine();
-        bw.close(); fw.close();
-        } catch (IOException e) {
-        e.getMessage();
-    }
+            case "crosswind":
+                System.out.println("crosswind");
+                //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                // System.out.println("velocity: " + myplane.velocity);
+                myplane.velocity += accel (myplane.x, myRunway.downwindX, myplane.y, myRunway.downwindY, myplane.velocity, myplane.Vno);
+                newPoint(myplane.x, myplane.y, myplane.z, myRunway.downwindX, myRunway.downwindY, 1000, myplane.velocity, myplane);
+                return;
+        }
     }
 
     public static void newPoint(double startX, double startY, double startZ, double endX, double endY, double endZ, double newDistance, plane myplane)
