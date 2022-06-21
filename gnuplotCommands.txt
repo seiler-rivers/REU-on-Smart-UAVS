@@ -4,7 +4,7 @@ GNUPLOT documentation can be found here: http://gnuplot.sourceforge.net/docs_4.2
 
 1. To draw 3D Graph: 
 
-> splot "ENTER THE PATH TO THE TEXT FILE PLOTPOINTS.TXT HERE" using 1:2:3 with #linespoint lc 'blue' title "UAV Path", "ENTER THE PATH TO THE TEXT FILE PLOTPOINTS.TXT HERE" using 4:5:6 with lines lw 5 lc 'black' title "Landing Strip"
+> splot ".TXT/.DAT file name here" using 1:2:3 with linespoint lc 'blue' title "UAV Path", "ENTER THE PATH TO THE TEXT FILE PLOTPOINTS.TXT HERE" using 4:5:6 with lines lw 5 lc 'black' title "Landing Strip"
 
 # Commands: 
  splot                   ----> Renders 3D graph (to render a 2D graph enter 'plot')
