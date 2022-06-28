@@ -1,4 +1,3 @@
-
 class plane
 {
     public String planeName;
@@ -8,31 +7,37 @@ class plane
     public double velocity;
     public double accel;
     public double Dtraveled;
-    public double Vno;  //normal operating range
-    public double Vso;  //power off stall, landing configuration
-    public double Vfe;  //max flaps extended speed
+    public double Vno;
+    public double Vso;
+    public double Vfe;
+    public double Vno2;
+    public double Vso2;
+    public double Vfe2;
+    public double stall;
+    public double heading;
 
-    //all airspeed is calibrated airspeed, not indicated
+    // planeArray[0] = new plane("UAV", x, y, Vno, Vso, Vfe);
 
-    public plane (String planeName, double x, double y, double Vno, double Vso, Double Vfe)
+    public plane (String planeName, double x, double y, double Vno, double Vso, double Vfe, double velocity, double heading) //double oldX, double oldY)
     {
         this.planeName = planeName;
         this.x = x;
         this.y = y;
-        z = 1000;
         this.Vno = Vno;
-        velocity = Vno;
-        Dtraveled = velocity + accel;
-        this.Vso = Vso; 
+        this.Vso = Vso;
         this.Vfe = Vfe;
+        this.velocity = velocity;
+        this.heading = heading;
+        z = 1000;
+        Dtraveled = velocity + accel;
     }
 
     public String toString()
     {
     return (planeName + "\t \t" +
             x + "\t" +
+            x + "\t" +
             y + "\t" +
-            z + "\t" +
             velocity); //+ "\t" +
             //turnTime);
     }
