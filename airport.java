@@ -14,7 +14,7 @@ public class airport {
         plane planeArray[] = new plane[10];    //array of plane classes
 
         makeRunway(runwayArray);
-        makePlane(planeArray, runwayArray[0]);
+        makePlane(planeArray, runwayArray);
         run(legQueue, planeArray, runwayArray);
     }
 
@@ -38,7 +38,6 @@ public class airport {
         int runway = 0;
         int WindMagnitude = 0;
         int WindDirection = 0;
-
         
         System.out.println("Enter the runway in use: "); //Check for Valid Runway Input
         do {
@@ -59,7 +58,6 @@ public class airport {
         in.close();
 
         System.out.println("");
-
 
         int runwayLength=0; double landX=0; double landY=0; double takeOffX=0; double takeOffY=0;
 
@@ -86,25 +84,27 @@ public class airport {
                 takeOffX = 5264; takeOffY = 4000;
                 break;
             default:
-                System.out.println("invalid runway. please enter 36, 18, 29, or 11");
+                System.out.println("invalid runway. please enter 36, 18, 29, or 11. Exiting Program");
+                System.exit(1);
+                
         }
         runway myRunway = new runway(runway, runwayLength, takeOffX, takeOffY, landX, landY, WindMagnitude, WindDirection);
         runwayArray[0] = myRunway;
-
+        //runwayArray[1] = new runway(29, 4000, 5264, 4000, 3895.92, 241.23);
     }
 
-    public static void makePlane(plane [] planeArray, runway myRunway){
+    public static void makePlane(plane [] planeArray, runway runwayArray[]){
         //method to add a plane to the plane array
         //adds name, x and y position, and velocity
 
-        double x = myRunway.start45X;  //start on 45
-        double y = myRunway.start45Y;
-        double Vno = 212.664; double Vso = 74.264; double Vfe = 145.152;    //c172
-        double Vno2 = 175.532; double Vso2 = 70.888; double Vfe2 = 150.215; //c150
-        double velocity = 150.0;
+        double x = runwayArray[0].start45X;  //start on 45
+        double y = runwayArray[0].start45Y;
+        double Vso = 74.264; double Vs = 85; double Vfe = 145.152; double velocity = Vfe * 1.1;   //c172
+        double Vso2 = 70.888; double Vs2 = 82; double Vfe2 = 150.215; double velocity2 = Vfe2 * 1.1;    //c150
+        double Vso3 = Vso * 1.2; double Vs3 = Vs * 1.2; double Vfe3 = Vfe * 1.2; double velocity3 = Vfe3 * 1.2;     //faster c172
         double heading = 0;
 
-        switch (myRunway.runway) //initialize runway in space based off of runway in use
+        switch (runwayArray[0].runway) //initialize runway in space based off of runway in use
         {
             case 18:
             heading = 45;
@@ -114,30 +114,23 @@ public class airport {
             heading = 225;
             case 29:
             heading = 315;
-
         }
 
-        /*Scanner in = new Scanner(System.in);
-        if(in.nextLine()=="c172")
-            Vno = 212.664; Vso = 74.264; Vfe = 145.152;
-        if(in.nextLine() == "c150")
-            Vno2 = 175.532; Vso2 = 70.888; Vfe2 = 150.215;*/
-
-        planeArray[0] = new plane("UAV", x, y, Vno, Vso, Vfe, velocity, heading);
-        planeArray[1] = new plane("plane2", x, y, Vno2, Vso2, Vfe2, velocity, heading);
-
+        planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, heading);     //UAV
+        planeArray[1] = new plane("c150", x, y, velocity2, Vso2, Vs2, Vfe2, heading); //plane
+        planeArray[2] = new plane("fast c172", x, y, velocity3 , Vso3 , Vs3 , Vfe3, heading); //plane
     }
 
     public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray) throws CloneNotSupportedException, IOException
     {
         DecimalFormat df = new DecimalFormat( "#0.000");
-        String x2 = ""; String y2 = ""; String z2 = "";
+        String x2 = ""; String y2 = ""; String z2 = ""; String x3 = ""; String y3 = ""; String z3 = "";
         File file = new File(String.valueOf(runwayArray[0].runway) + "_plot.dat");
-        String formatStr = "%-15s %-15s %-15s %-15s %-15s %-15s%n";
+        String formatStr = "%-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s%n";
         try {
             FileWriter fw = new FileWriter(file);
             BufferedWriter b = new BufferedWriter(fw);
-            b.write(String.format(formatStr, "#x", "y", "z", "x2", "y2", "z2"));            
+            b.write(String.format(formatStr, "#x", "y", "z", "x2", "y2", "z2", "x3", "y3", "z3"));            
             b.newLine();
             b.close();
         } catch (IOException e) {
@@ -146,34 +139,69 @@ public class airport {
 
         makeQueue(legQueue);
         Queue clone = (Queue) legQueue.clone();
+        Queue clone2 = (Queue) legQueue.clone();
 
-        while(clock <= 230)
+
+        while(clock <=300)
         {
-            String x = String.valueOf(df.format(planeArray[0].x)); String y = String.valueOf(df.format(planeArray[0].y)); String z = String.valueOf(df.format(planeArray[0].z));
+           String x = String.valueOf(df.format(planeArray[1].x)); String y = String.valueOf(df.format(planeArray[1].y)); String z = String.valueOf(df.format(planeArray[1].z));
+           
             try {
                 FileWriter fw = new FileWriter(runwayArray[0].runway + "_plot.dat", true);
                 BufferedWriter b = new BufferedWriter(fw);
-                b.write(String.format(formatStr, x, y, z, x2, y2, z2));        
+                b.write(String.format(formatStr, x, y, z, x2, y2, z2, x3, y3, z3));        
                 b.newLine();
                 b.close();
             } catch (IOException e) {
                 e.getMessage();
             }
-            changeLeg(legQueue, planeArray[0], runwayArray[0]);
 
-            if(clock >= 500)   //second plane 100 seconds behind
+            System.out.println("clock: " + clock);
+            System.out.print(planeArray[1].planeName + " ");    //c150 plane starts first
+            System.out.println("velocity: " + df.format(planeArray[1].velocity));
+            changeLeg(legQueue, planeArray[1], runwayArray[0]);
+
+            
+            if(clock >=20)   //UAV 20 seconds behind
             {
-                changeLeg(clone, planeArray[1], runwayArray[0]);
-                x2 = String.valueOf(df.format(planeArray[1].x)); y2 = String.valueOf(df.format(planeArray[1].y)); z2 = String.valueOf(df.format(planeArray[1].z));
+                System.out.print(planeArray[0].planeName + " ");    //c172 UAV follows
+                System.out.println("velocity: " + df.format(planeArray[0].velocity));
+                changeLeg(clone, planeArray[0], runwayArray[0]);
+                x2 = String.valueOf(df.format(planeArray[0].x)); y2 = String.valueOf(df.format(planeArray[0].y)); z2 = String.valueOf(df.format(planeArray[0].z));
+                collide(planeArray, 1);
+                double dd = Math.sqrt( 
+                    Math.pow(planeArray[1].x - planeArray[0].x,2) + Math.pow(planeArray[1].y - planeArray[0].y, 2)+ Math.pow(planeArray[1].z - planeArray[0].z, 2));
+        
+                    if(dd <= 200)
+                    {
+                        System.out.println("collision  with " + planeArray[1].planeName + " occurred at clock " + clock);
+                        System.exit(1);
+                    }
             } 
+            if(clock >=40)   //other plane 40 seconds behind
+            {
+                System.out.print(planeArray[2].planeName + " ");    //fast 172 follows
+                System.out.println("velocity: " + planeArray[2].velocity);
+                changeLeg(clone2, planeArray[2], runwayArray[0]);
+                x3 = String.valueOf(df.format(planeArray[2].x)); y3 = String.valueOf(df.format(planeArray[2].y)); z3 = String.valueOf(df.format(planeArray[2].z));
+                collide(planeArray, 2);
+                double d = Math.sqrt( 
+                    Math.pow(planeArray[2].x - planeArray[0].x,2) + Math.pow(planeArray[2].y - planeArray[0].y, 2)+ Math.pow(planeArray[2].z - planeArray[0].z, 2));
+        
+                    if(d <= 200)
+                    {
+                        System.out.println("collision  with " + planeArray[2].planeName + " occurred at clock " + clock);
+                        System.exit(1);
+                    }
+            }
 
+            System.out.println();
             clock++;
         }
-    }
+}
 
     public static void changeLeg(Queue legQueue, plane myplane, runway myRunway){
         //method to switch legs in the pattern once the plane has reached the correct position
-
 
         if(legQueue.isEmpty())
         {
@@ -392,70 +420,70 @@ public class airport {
         String leg = (legQueue.front()).toString();   
         switch(leg) {           //check what leg currently on, update position and time
             case "45": 
-                System.out.println("45");
-                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z) + " " + myplane.heading);
-                //  System.out.println("velocity: " + myplane.velocity);
+                 System.out.println("45");
+               // System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
+                //System.out.println("velocity: " + myplane.velocity);
                 //start and end height is 1000
                 //no acceleration on the 45
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.end45X, myRunway.end45Y, 1000, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
                 return;
 
             case "downwind": 
                 System.out.println("downwind");
-                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z) + " " + myplane.heading);
+                //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 // System.out.println("velocity: " + myplane.velocity);
                 //start height 1000 at end of 45, end height 1000 abeam numbers
-                myplane.velocity += accel (myplane.x, myRunway.abeamX, myplane.y, myRunway.abeamY, myplane.velocity, myplane.Vfe);  //vfe
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                double y = accel (myplane.x, myRunway.abeamX, myplane.y, myRunway.abeamY, myplane.velocity, myplane.Vfe);  //vfe
+                myplane.velocity += accel (myplane.x, myRunway.abeamX, myplane.y, myRunway.abeamY, myplane.velocity, myplane.Vfe);  //86 kts
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.abeamX, myRunway.abeamY, 1000, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myplane.y, myRunway.downwindY, myplane, myRunway.WindMagnitude, myRunway.WindDirection, 1);
                 return;
 
             case "abeam":
                 System.out.println("abeam");
-                System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z) + " " + myplane.heading);
+                //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 // System.out.println("velocity: " + myplane.velocity);
                 //start height 1000 abeam numbers, descned to 700
-                myplane.velocity += accel (myplane.x, myRunway.baseX, myplane.y, myRunway.baseY, myplane.velocity, (1.4 * myplane.Vso));
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                myplane.velocity += accel (myplane.x, myRunway.baseX, myplane.y, myRunway.baseY, myplane.velocity, (.9 * myplane.Vfe)); //77 kts
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.baseX, myRunway.baseY, 700, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myRunway.abeamY, myplane.y, myplane.z, myRunway.baseX, myRunway.baseY, 700, myplane.velocity, myplane, myRunway);
-                //myplane.velocity += accel (myplane.x, myRunway.baseX, myplane.y, myRunway.baseY, myplane.velocity, (1.4 * myplane.Vso));
                 return;
 
             case "base":
-                System.out.println("base" + " " + myplane.heading);
-
+                System.out.println("base");
                 //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 //System.out.println("velocity: " + myplane.velocity);
-                myplane.velocity += accel (myplane.x, myRunway.finalX, myplane.y, myRunway.finalY, myplane.velocity, (1.3 * myplane.Vso));
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                myplane.velocity += accel (myplane.x, myRunway.finalX, myplane.y, myRunway.finalY, myplane.velocity, (1.6 * myplane.Vso));  //70 kts
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.finalX, myRunway.finalY, 400, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myplane.x, myRunway.finalX, myplane, myRunway.WindMagnitude, myRunway.WindDirection, 0.55);
                 return;
 
             case "final":   //NOT FULL STOP, CHECK LANDING VELOCITY
-                System.out.println("final"+ " " + myplane.heading);
+                System.out.println("final");
                 // System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 //System.out.println("velocity: " + myplane.velocity);
-                myplane.velocity += accel (myplane.x, myRunway.touchDownX, myplane.y, myRunway.touchDownY, myplane.velocity, (myplane.Vso * .8));
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                myplane.velocity += accel (myplane.x, myRunway.touchDownX, myplane.y, myRunway.touchDownY, myplane.velocity, (myplane.Vso)); //44
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.touchDownX, myRunway.touchDownY, 0, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myplane.y, myRunway.landY, myplane, myRunway.WindMagnitude, myRunway.WindDirection, 0.85);
                 return;
 
             case "upwind":
-                System.out.println("upwind"+ " " + myplane.heading);
+                System.out.println("upwind");
                 //  System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 // System.out.println("velocity: " + myplane.velocity);
-                myplane.velocity += accel (myplane.x, myRunway.crosswindX, myplane.y, myRunway.crosswindY, myplane.velocity,  (.8 * myplane.Vno));
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                myplane.velocity += accel (myplane.x, myRunway.crosswindX, myplane.y, myRunway.crosswindY, myplane.velocity,  (.89 * myplane.Vfe));
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.crosswindX, myRunway.crosswindY, 700, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myplane.y, myRunway.crosswindY, myplane, myRunway.WindMagnitude, myRunway.WindDirection, 0.85);
                 return;
 
             case "crosswind":
-                System.out.println("crosswind"+ " " + myplane.heading);
+                System.out.println("crosswind");
                 //System.out.println("clock: " + clock + " x: " + df.format(myplane.x) + " y: " + df.format(myplane.y) + " z: " + df.format(myplane.z));
                 // System.out.println("velocity: " + myplane.velocity);
-                myplane.velocity += accel (myplane.x, myRunway.downwindX, myplane.y, myRunway.downwindY, myplane.velocity, myplane.Vno);
+                myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
+                myplane.velocity += accel (myplane.x, myRunway.downwindX, myplane.y, myRunway.downwindY, myplane.velocity, (myplane.Vfe * 1.1));
                 newPoint(myplane.x, myplane.y, myplane.z, myRunway.downwindX, myRunway.downwindY, 1000, myplane.velocity, myplane, myRunway.WindMagnitude, myRunway.WindDirection);
-                //windCorrection(myplane.x, myRunway.downwindX, myplane, myRunway.WindMagnitude, myRunway.WindDirection, 0.55);
                 return;
         }
     }
@@ -464,7 +492,7 @@ public class airport {
     { //method to determine new point a certain distance along a vector
       //distance is velocity (distance traveled in one clock pulse)
       //plane position is updated based on what leg currently on
-      
+        
         double Vx = endX - startX;
         double Vy = endY - startY;
         double Vz = endZ - startZ;
@@ -473,13 +501,6 @@ public class airport {
         double newX = ( newDistance * (Vx / norm) ) + startX;
         double newY = ( newDistance * (Vy / norm) ) + startY;
         double newZ = ( newDistance * (Vz / norm) ) + startZ;
-
-        //double WindX = WindMagnitude * Math.cos(WindDirection * Math.PI / 180);
-        //double WindY = WindMagnitude * Math.sin(WindDirection * Math.PI / 180);
-
-        //myplane.x = newX + WindX;
-        //myplane.y = newY + WindY;
-        //myplane.z = newZ;
 
         //---------Calculate Heading--------------------------
 
@@ -524,21 +545,6 @@ public class airport {
 
     }
 
-
-
-    public static void windCorrection(){
-
-        double w1, w2, w3; //weight factors
-        double newHeading; // = 
-        double P, I, D;
-
-        //---------Proportional Calculation--------------------------
-
-
-
-    }
-        
-
     public static double accel(double startx, double endx, double starty, double endy, double startv, double endv)
     {
         double d = Math.sqrt(( 
@@ -547,4 +553,75 @@ public class airport {
         double a = ( (Math.pow(endv,2) - Math.pow(startv, 2)) / (2*d) );
         return a;
     }
+
+    public static void collide(plane planeArray[], int planeNum)
+    {
+        double rate = rateOfCollision(planeArray, planeNum);
+        /*if rate small
+         *      stall speed
+         * if rate mid
+         *      s turns
+         * if rate big
+         *      360
+         * if rate very big
+         *      ascend
+         */
+
+        if(rate >= .8 && rate < 1)
+            //slow to stall speed based on other plane position
+        {
+            if(planeArray[0].velocity > planeArray[0].Vs)
+            {
+                double x = accel(planeArray[0].x, planeArray[planeNum].prevX, planeArray[0].y, planeArray[planeNum].prevY, planeArray[0].velocity, planeArray[planeNum].velocity);
+                planeArray[0].velocity += x;
+                System.out.println("collision correction: " + x);
+                System.out.println("new velocity: " + planeArray[0].velocity);
+            }
+            else
+                System.out.println("stall speed");
+        }
+    }
+
+    public static double rateOfCollision(plane planeArray[], int planeNum)
+    {
+        double rate = 0.0;
+
+        double distance = Math.sqrt( Math.pow(planeArray[0].x - planeArray[planeNum].x,2)
+             + Math.pow(planeArray[0].y - planeArray[planeNum].y, 2)
+             + Math.pow(planeArray[0].z - planeArray[planeNum].z, 2));
+
+        double prevDistance = Math.sqrt( Math.pow(planeArray[0].prevX - planeArray[planeNum].prevX,2)
+             + Math.pow(planeArray[0].prevY - planeArray[planeNum].prevY, 2)
+             + Math.pow(planeArray[0].prevZ - planeArray[planeNum].prevZ, 2));
+
+
+        rate = distance/prevDistance;
+        System.out.println("distance " + planeNum + ": " + distance);
+        System.out.println("rate of closure: " + rate);
+
+        return rate;
+    }
+    //this is just a test method, still working on it
+    /*public static void move360(plane planeArray[], int planeNum,double x, double y)
+    {   
+        double L = planeArray[planeNum].velocity;
+        //double r = 200;
+            
+
+        double Vx = -x;//(-1 * x) -x;
+        double Vy = y;
+        double norm = Math.sqrt( Math.pow(Vx, 2) + Math.pow(Vy, 2));
+        
+        double centerX = ( 200 * (Vx / norm) ) + x;
+        double centerY = ( 200 * (Vy / norm) ) + y;
+        double r = Math.sqrt((Math.pow(planeArray[planeNum].x - centerX, 2) + Math.pow(planeArray[planeNum].y + centerY, 2)));
+        double angle = Math.atan2(planeArray[planeNum].y - centerY, planeArray[planeNum].x - centerX);
+
+        angle = angle - L/r;
+
+        planeArray[planeNum].x = centerX + r * Math.cos(angle);
+        
+        planeArray[planeNum].y = centerY + r * Math.sin(angle);
+    }*/
+    
 }
