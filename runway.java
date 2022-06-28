@@ -1,12 +1,14 @@
-class runway
-{
-    public int heading;
-    public double length ;
+class runway {
+
+    public int runway;
+    public double length;
     public double y;
     public double landX;
     public double landY;
     public double takeOffX;
     public double takeOffY;
+    public int WindMagnitude;
+    public int WindDirection;
 
     public double downwindX;
     public double downwindY;
@@ -28,14 +30,15 @@ class runway
     public double touchDownY;
 
 
-    public runway (int heading, double length, double takeOffX, double takeOffY, double landX, double landY) 
-    {
-        this.heading = heading;
+    public runway (int runway, double length, double takeOffX, double takeOffY, double landX, double landY, int WindMagnitude, int WindDirection) {
+        this.runway = runway;
         this.length = length;
         this.landX = landX;
         this.landY = landY;
         this.takeOffX = takeOffX;
         this.takeOffY = takeOffY;
+        this.WindDirection = WindDirection;
+        this.WindMagnitude = WindMagnitude;
 
         //coordinate of start of crosswind
         crosswindX = newX(takeOffX, takeOffY, landX, landY, -3500);
@@ -86,7 +89,7 @@ class runway
         double Vy = endY - startY;
         double norm = Math.sqrt( Math.pow(Vx, 2) + Math.pow(Vy, 2) );
         
-        double newX = ( newDistance * (Vx / norm) ) + startX;
+        double newX = (newDistance * (Vx / norm)) + startX;
         return newX; 
     }
 
