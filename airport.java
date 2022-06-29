@@ -108,12 +108,18 @@ public class airport {
         {
             case 18:
             heading = 45;
+                break;
             case 11:
             heading = 135;
+                break;
             case 36:
             heading = 225;
+                break;
             case 29:
             heading = 315;
+                break;
+            default:
+            heading = 0;
         }
 
         planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, heading);     //UAV
