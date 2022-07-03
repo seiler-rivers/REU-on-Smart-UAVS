@@ -10,12 +10,18 @@ class plane
     public double Vso;  //power off stall, landing configuration
     public double Vs;   //power off stall, clean configuration
     public double Vfe;  //max flaps extended speed
+    public double Vx;
+    public double climbRate;
     public double prevX; double prevY; double prevZ;
     public double heading;
+    public String intent;
+    public String collisionMethod;
+    public double maneuverArray[];  //for storing coordinates of collision avoidance maneuvers
+    
 
     //all airspeed is calibrated airspeed, not indicated
 
-    public plane (String planeName, double x, double y, double velocity, double Vso, double Vs, double Vfe, double heading)
+    public plane (String planeName, double x, double y, double velocity, double Vso, double Vs, double Vfe, double Vx, double climbRate, double heading, String intent)
     {
         this.planeName = planeName;
         this.x = x;
@@ -25,6 +31,11 @@ class plane
         prevX = x; prevY = y; prevZ = z;
         this.Vso = Vso; 
         this.Vfe = Vfe;
+        this.Vx = Vx;
+        this.climbRate = climbRate;
         this.heading = heading;
+        this.intent = intent;
+        collisionMethod = "none";
+        maneuverArray = new double[3];
     }
 }
