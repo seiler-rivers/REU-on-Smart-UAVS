@@ -669,7 +669,7 @@ public class airport {
 
         myplane.heading = degrees;
 
-        /*//---------Calculate Wind--------------------------
+        //---------Calculate Wind--------------------------
 
         double windX = WindMagnitude * Math.cos((WindDirection * Math.PI) / 180) + startX; // wind vector X
         double windY = WindMagnitude * Math.sin((WindDirection * Math.PI) / 180) + startY; // wind vector Y
@@ -685,12 +685,12 @@ public class airport {
         if  (windMag == 0){
             unitWindX = 0;
             unitWindY = 0;
-        }*/
+        }
 
         //---------Calculate NewPoint--------------------------
 
-        myplane.x = newX + /*(unitWindX * windMag)*/ + (unitHx * myplane.velocity);
-        myplane.y = newY + /*(unitWindY * windMag)*/ + (unitHy * myplane.velocity);
+        myplane.x = newX + (unitWindX * windMag) + (unitHx * myplane.velocity);
+        myplane.y = newY + (unitWindY * windMag) + (unitHy * myplane.velocity);
         myplane.z = newZ +                         (unitHz * myplane.velocity);
 
     }
