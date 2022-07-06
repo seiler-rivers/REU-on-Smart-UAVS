@@ -14,14 +14,13 @@ class plane
     public double climbRate;
     public double prevX; double prevY; double prevZ;
     public double heading;
-    public String intent;
     public String collisionMethod;
     public double maneuverArray[];  //for storing coordinates of collision avoidance maneuvers
     
 
     //all airspeed is calibrated airspeed, not indicated
 
-    public plane (String planeName, double x, double y, double velocity, double Vso, double Vs, double Vfe, double Vx, double climbRate, double heading, String intent)
+    public plane (String planeName, double x, double y, double velocity, double Vso, double Vs, double Vfe, double Vx, double climbRate, double heading)
     {
         this.planeName = planeName;
         this.x = x;
@@ -34,7 +33,6 @@ class plane
         this.Vx = Vx;
         this.climbRate = climbRate;
         this.heading = heading;
-        this.intent = intent;
         collisionMethod = "none";
         maneuverArray = new double[3];
     }
