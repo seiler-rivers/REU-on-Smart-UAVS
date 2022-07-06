@@ -10,7 +10,7 @@ public class combined {
     public static void main(String[]args) throws CloneNotSupportedException, IOException
     {
         Queue legQueue = new Queue();       //queue of each leg of pattern
-        runway runwayArray[] = new runway[10];          //array of runways --- CHANGE??????
+        runway runwayArray[] = new runway[10];          //array of runways
         plane planeArray[] = new plane[10];    //array of plane classes
 
         makeRunway(runwayArray);
@@ -117,10 +117,10 @@ public class combined {
             heading = 315;
         }
 
-        planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, Vx, climbRate, heading, "touch and go");     //UAV
-        planeArray[1] = new plane("c150", x, y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, heading, "touch and go"); //plane
+        planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, Vx, climbRate, heading);     //UAV
+        planeArray[1] = new plane("c150", x, y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, heading ); //plane
         //planeArray[1] = new plane("c150", runwayArray[1].start45X, runwayArray[1].start45Y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, 29, "touch and go"); //plane
-        planeArray[2] = new plane("fast c172", x, y, velocity3 , Vso3 , Vs3 , Vfe3, Vx3, climbRate3, heading, "touch and go"); //plane
+        planeArray[2] = new plane("fast c172", x, y, velocity3 , Vso3 , Vs3 , Vfe3, Vx3, climbRate3, heading); //plane
     }
 
     public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray) throws CloneNotSupportedException, IOException
