@@ -38,6 +38,7 @@ public class airport {
         int runway = 0;
         int WindMagnitude = 0;
         int WindDirection = 0;
+        double knots = 0;
         
        //System.out.println("Enter the runway in use: "); //Check for Valid Runway Input
         do {
@@ -51,10 +52,12 @@ public class airport {
         } while (WindDirection < 1 || WindDirection > 360);
         
 
-        System.out.println("Enter a magnitude for wind. The wind can be as high as 25, or as low as 0.");// Wind Speed
+        System.out.println("Enter a magnitude for wind. The wind can be as high as 15, or as low as 0.");// Wind Speed
         do {
-            WindMagnitude = in.nextInt();
-        } while (WindMagnitude < 0 || WindMagnitude > 30);
+            knots = in.nextInt() * 1.688;
+            WindMagnitude = (int) knots;
+
+        } while (WindMagnitude < 0 || WindMagnitude > 25);
 
         in.close();
 
@@ -147,7 +150,7 @@ public class airport {
         Queue clone = (Queue) legQueue.clone(); 
         Queue clone2 = (Queue) legQueue.clone();
 
-        while(clock <= 150)
+        while(clock <= 300)
         {
             try {
                 FileWriter fw = new FileWriter(runwayArray[0].runway + "_plot.dat", true);
@@ -183,7 +186,7 @@ public class airport {
                     System.out.println();
             } 
 
-            if(clock >=21)   //other plane 40 seconds behind
+            if(clock >=23)   //other plane 40 seconds behind
             {
                 System.out.print(planeArray[2].planeName + " ");    //fast 172 follows
                 System.out.println("velocity: " + planeArray[2].velocity);
@@ -295,7 +298,7 @@ public class airport {
                     Math.pow(myRunway.finalX - myplane.x,2) + Math.pow(myRunway.finalY - myplane.y, 2)+ Math.pow(400 - myplane.z, 2));  
                 switch (myRunway.runway){
                     case 36:
-                        myplane.heading = 180;
+                        myplane.heading = 360;
                         break;
                     case 18:
                         myplane.heading = 180;
@@ -317,7 +320,7 @@ public class airport {
                     Math.pow(myRunway.touchDownX - myplane.x,2) + Math.pow(myRunway.touchDownY - myplane.y, 2)+ Math.pow(0 - myplane.z, 2));  
                 switch (myRunway.runway){
                     case 36:
-                        myplane.heading = 180;
+                        myplane.heading = 360;
                         break;
                     case 18:
                         myplane.heading = 180;
@@ -518,12 +521,12 @@ public class airport {
             {
                 case 29:
                 case 36:
-                    if(myPlane.x > myRunway.landX)
+                    if(myPlane.x > myRunway.touchDownX)
                         s = true;
                     break;
                 case 11:
                 case 18:
-                    if(myPlane.x < myRunway.landX)
+                    if(myPlane.x < myRunway.touchDownX)
                         s = true;
                     break;
             }
@@ -698,7 +701,7 @@ public class airport {
                 System.out.println("final");
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
-                    case 36: expected = 180; break;
+                    case 36: expected = 360; break;
                     case 18: expected = 180; break;
                     case 11: expected = 250; break;
                     case 29: expected = 70; break;
@@ -727,7 +730,7 @@ public class airport {
                 System.out.println("upwind");
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
-                    case 36: expected = 180; break;
+                    case 36: expected = 360; break;
                     case 18: expected = 180; break;
                     case 11: expected = 250; break;
                     case 29: expected = 70; break;
@@ -840,15 +843,19 @@ public class airport {
     
             double actual = myplane.heading;
             double diff = actual - expected;
-            if (leg == "final" || leg == "45" ){
+            if (leg == "final" || leg == "upwind"){
                 System.out.println (actual + " - " + expected + " = " + diff); //downwind
             }
 
-                if (((myRunway.runway == 18|| myRunway.runway == 29 || myRunway.runway == 11 || (myRunway.runway == 36 && leg == "abeam") || (myRunway.runway == 36 && leg == "downwind") || (myRunway.runway == 36 && leg == "45") || (myRunway.runway == 36 && leg == "base") || (myRunway.runway == 36 && leg == "final"|| (myRunway.runway == 36 && leg == "upwind"))))){
+                if (((myRunway.runway == 18|| myRunway.runway == 29 || myRunway.runway == 11 || (myRunway.runway == 36 && leg == "abeam") || (myRunway.runway == 36 && leg == "downwind") || (myRunway.runway == 36 && leg == "45") || (myRunway.runway == 36 && leg == "final") || (myRunway.runway == 36 && leg == "base") || (myRunway.runway == 36 && leg == "upwind")))){
                     if (diff < 0){
                        diff = diff * -1;
                    }
                 } 
+
+                if (myRunway.runway == 11 && leg == "final"){
+                    diff = diff * -1;
+                }
 
             double oppWind = WindDirection - 180;;
 
@@ -857,7 +864,7 @@ public class airport {
 
             double ratio1 = 1.55;
             double ratio2 = 1.25;
-            double ratio3 = 1.75;
+            double ratio3 = 1.85;
 
             //if (myRunway.runway == 11){// || (myRunway.runway == 36 && leg == "final") || (myRunway.runway == 36 && leg == "upwind"))){
               //  ratio1 = 0.55;
@@ -880,23 +887,25 @@ public class airport {
                 myplane.y = ratio2 *(WindMagnitude * Math.sin((oppWind * Math.PI) / 180)) + myplane.y;
                 //System.out.println("3 > diff < 5");
             }
-        
-            if (diff < -5.0 && diff > -8.0){
-                myplane.x = ratio1 * (WindMagnitude * Math.cos((WindDirection * Math.PI) / 180)) + myplane.x;
-                myplane.y = ratio1 * (WindMagnitude * Math.sin((WindDirection * Math.PI) / 180)) + myplane.y;
-                //System.out.println("diff > -5");
-            }
-
-            if (diff > -8.0 && diff < -10.5 ){
-                myplane.x = ratio3 * (WindMagnitude * Math.cos((oppWind * Math.PI) / 180)) + myplane.x;
-                myplane.y = ratio3 * (WindMagnitude * Math.sin((oppWind * Math.PI) / 180)) + myplane.y;
-            }
-        
+            
             if (diff < -2.5 && diff > -5.0){
                 myplane.x = ratio2 * (WindMagnitude * Math.cos((WindDirection * Math.PI) / 180)) + myplane.x;
                 myplane.y = ratio2 * (WindMagnitude * Math.sin((WindDirection * Math.PI) / 180)) + myplane.y;
                 //System.out.println("-3 > diff < -5");
             }
+        
+            if (diff > -8.0 && diff < -5.0){
+                myplane.x = ratio1 * (WindMagnitude * Math.cos((WindDirection * Math.PI) / 180)) + myplane.x;
+                myplane.y = ratio1 * (WindMagnitude * Math.sin((WindDirection * Math.PI) / 180)) + myplane.y;
+                //System.out.println("diff > -5");
+            }
+
+            if (diff > -11.5 && diff < -8.0 ){
+                myplane.x = ratio3 * (WindMagnitude * Math.cos((oppWind * Math.PI) / 180)) + myplane.x;
+                myplane.y = ratio3 * (WindMagnitude * Math.sin((oppWind * Math.PI) / 180)) + myplane.y;
+            }
+        
+            
 
             double deltaX = prevX - myplane.x;
             double deltaY = prevY - myplane.y;
@@ -906,18 +915,18 @@ public class airport {
             } */
             double rad = Math.atan(deltaY/deltaX);  //Magnitude of Heading in Radians
             double deg = ((rad * 180) / Math.PI); //+ 180; //Convert to Degrees
-            if (leg == "45"){
+            if (leg == "crosswind" || leg == "final"){
                 System.out.println("heading: " + deg);
             }
+                //|| ( leg == "final" && myRunway.runway == 36 ) || (leg == "upwind" && myRunway.runway == 36 )
 
-
-                if ( (leg == "downwind" && myRunway.runway == 18 ) || (leg == "abeam" && myRunway.runway == 18 ) || ( leg == "final" && myRunway.runway == 36 ) || (leg == "upwind" && myRunway.runway == 36 )|| (myRunway.runway == 29 && leg == "base") || (leg == "45" && myRunway.runway == 29 )){
+                if ( (leg == "downwind" && myRunway.runway == 18 ) || (leg == "abeam" && myRunway.runway == 18 ) || (myRunway.runway == 29 && leg == "base") || (leg == "45" && myRunway.runway == 29 ) || ( leg == "final" && myRunway.runway == 36 ) || ( leg == "upwind" && myRunway.runway == 36 )){
                         deg = 360 - Math.abs(deg);
-                } else if (leg == "downwind" && myRunway.runway == 29 || (myRunway.runway == 36  && leg == "45") || (leg == "downwind" && myRunway.runway == 29 ) || (leg == "abeam" && myRunway.runway == 29 )){ // || (leg == "final" && myRunway.runway == 11 ) || (leg == "upwind" && myRunway.runway == 11 )){
+                } else if (leg == "downwind" && myRunway.runway == 29 || (myRunway.runway == 36  && leg == "45") || (leg == "downwind" && myRunway.runway == 29 ) || (leg == "crosswind" && myRunway.runway == 36 )|| (myRunway.runway == 11  && leg == "upwind") || (myRunway.runway == 11  && leg == "final") || (leg == "abeam" && myRunway.runway == 29 || (leg == "base" && myRunway.runway == 36))){ // || (leg == "final" && myRunway.runway == 11 ) || (leg == "upwind" && myRunway.runway == 11 )){
                         deg = deg + 180;
-                } else if (myRunway.runway == 18 ){
+                } else if (myRunway.runway == 18){
                     deg = deg;
-                } else if ((myRunway.runway == 11 && leg == "45" )|| (myRunway.runway == 36 && leg == "downwind") || (myRunway.runway == 36 && leg == "abeam")  ){
+                } else if ((myRunway.runway == 11 && leg == "45" )|| (myRunway.runway == 36 && leg == "downwind") || (myRunway.runway == 36 && leg == "abeam")){
                     deg = (360 - Math.abs(deg)) - 180;
                 } else if (deg < 0){
                         deg = Math.abs(deg) + 180;
@@ -968,20 +977,20 @@ public class airport {
             else
                 System.out.println("stall speed");
         }
-        if((planeArray[0].collisionMethod == "none" && d < 1700 && d > 500 && planeArray[0].z > 200) )
+        if((planeArray[0].collisionMethod == "none" && d < 1700 && d > 700 && planeArray[0].z > 200) )
         {
             System.out.println("got here with plane: " + planeNum);
             System.out.println("360");
             planeArray[0].collisionMethod = "start360";
         }
-        if((d1 < 500 || d2 < 500))
+        if((d1 < 700 || d2 < 700))
         {
             System.out.println("got here");
             System.out.println("d1: " + d1 + " d2 " + d2);
             planeArray[0].collisionMethod = "ascend";
             planeArray[0].velocity += accel(planeArray[0].x, planeArray[planeNum].x, planeArray[0].y, planeArray[planeNum].y, planeArray[0].velocity, planeArray[0].Vx);
         }
-        if(d1 >= 500 && d2>= 500 && planeArray[0].collisionMethod =="ascend")
+        if(d1 >= 700 && d2>= 700 && planeArray[0].collisionMethod =="ascend")
         {
                 planeArray[0].collisionMethod = "none";
                 if(passed(planeArray[0], myrunway, legqueue))
