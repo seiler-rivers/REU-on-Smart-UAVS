@@ -124,10 +124,10 @@ public class airport {
                 break;
         }
 
-        planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, Vx, climbRate, heading, "touch and go");     //UAV
-        planeArray[1] = new plane("c150", x, y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, heading, "touch and go"); //plane
-        //planeArray[1] = new plane("c150", runwayArray[1].start45X, runwayArray[1].start45Y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, 29, "touch and go"); //plane
-        planeArray[2] = new plane("fast c172", x, y, velocity3 , Vso3 , Vs3 , Vfe3, Vx3, climbRate3, heading, "touch and go"); //plane
+        planeArray[0] = new plane("c172", x, y, velocity, Vso, Vs, Vfe, Vx, climbRate, heading);     //UAV
+        planeArray[1] = new plane("c150", x, y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, heading); //plane
+        //planeArray[1] = new plane("c150", runwayArray[1].start45X, runwayArray[1].start45Y, velocity2, Vso2, Vs2, Vfe2, Vx2, climbRate2, 29); //plane on other runway
+        planeArray[2] = new plane("fast c172", x, y, velocity3 , Vso3 , Vs3 , Vfe3, Vx3, climbRate3, heading); //plane
     }
 
     public static void run(Queue legQueue, plane[] planeArray, runway[] runwayArray) throws CloneNotSupportedException, IOException
@@ -164,7 +164,7 @@ public class airport {
 
             System.out.println("clock: " + clock);
             System.out.print(planeArray[1].planeName + " ");    //c150 plane starts first
-            //System.out.println("velocity: " + df.format(planeArray[1].velocity));
+            System.out.println("velocity: " + df.format(planeArray[1].velocity));
             x = String.valueOf(df.format(planeArray[1].x));  y = String.valueOf(df.format(planeArray[1].y));  z = String.valueOf(df.format(planeArray[1].z));
             changeLeg(legQueue, planeArray[1], runwayArray[0]);
             System.out.println();
@@ -387,7 +387,6 @@ public class airport {
         }
         else if(myplane.collisionMethod == "360")
         {
-            System.out.println("360: ");
             double angle = myplane.maneuverArray[2];
             double L = myplane.velocity;
             angle -= L/500;
@@ -395,7 +394,6 @@ public class airport {
             myplane.maneuverArray[2] = angle;
             myplane.x = myplane.maneuverArray[0] + 500 * Math.cos(angle);
             myplane.y = myplane.maneuverArray[1] + 500 * Math.sin(angle);
-            System.out.println("angle: " + angle);
             if(myRunway.runway == 11 || myRunway.runway == 18)
             {
                 if(angle - 5* (L/500)<= -(2*(Math.PI )))
@@ -409,7 +407,6 @@ public class airport {
         }
         else if(myplane.collisionMethod == "start360")
         {
-            System.out.println("start 360: " + myplane.x + " " + myplane.y);
 
             increasePos(legQueue, myplane, myRunway);
 
@@ -424,9 +421,6 @@ public class airport {
             double centerY = ( 500 * (Vy / norm) ) + myplane.y;
             double angle =  Math.atan2(myplane.y - centerY, myplane.x - centerX);   //angle from current point, center, to new point along circle
             myplane.maneuverArray[0] = centerX; myplane.maneuverArray[1] = centerY; myplane.maneuverArray[2] = angle;
-
-            System.out.println("center: " + centerX + " " + centerY);
-            System.out.println("angle: " + angle);
 
             double L = myplane.velocity;
             angle = angle - L/500;
@@ -578,7 +572,6 @@ public class airport {
         String leg = (legQueue.front()).toString();   
         switch(leg) {           //check what leg currently on, update position and time
             case "45": 
-                System.out.println("45");
                 //start and end height is 1000
                 //no acceleration on the 45
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
@@ -608,7 +601,6 @@ public class airport {
                 return;
 
             case "downwind": 
-                System.out.println("downwind");
                 //start height 1000 at end of 45, end height 1000 abeam numbers
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
@@ -639,7 +631,6 @@ public class airport {
                 return;
 
             case "abeam":
-                System.out.println("abeam");
                 //start height 1000 abeam numbers, descned to 700
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
@@ -669,7 +660,6 @@ public class airport {
                 return;
 
             case "base":
-                System.out.println("base");
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
                     case 36: expected = 270; break;
@@ -697,8 +687,7 @@ public class airport {
                 }
                 return;
 
-            case "final":   //NOT FULL STOP, CHECK LANDING VELOCITY
-                System.out.println("final");
+            case "final": 
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
                     case 36: expected = 360; break;
@@ -727,7 +716,6 @@ public class airport {
                 return;
 
             case "upwind":
-                System.out.println("upwind");
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
                     case 36: expected = 360; break;
@@ -756,7 +744,6 @@ public class airport {
                 return;
 
             case "crosswind":
-                System.out.println("crosswind");
                 myplane.prevX = myplane.x; myplane.prevY = myplane.y; myplane.prevZ = myplane.z;
                 switch(myRunway.runway) {
                     case 36: expected = 90; break;
@@ -979,16 +966,11 @@ public class airport {
             }
             double deltaX = prevX - myplane.x;
             double deltaY = prevY - myplane.y;
-             /* if (leg == "upwind"){
-                System.out.println (prevX + " - " + myplane.x + " = " + deltaX);
-                System.out.println (prevY + " - " + myplane.y + " = " + deltaY);
-            } */ 
             double rad = Math.atan(deltaY/deltaX);  //Magnitude of Heading in Radians
             double deg = ((rad * 180) / Math.PI); //+ 180; //Convert to Degrees
             if (leg == "final" || leg == "upwind"){
                 System.out.println("heading: " + deg);
             }
-                //|| ( leg == "final" && myRunway.runway == 36 ) || (leg == "upwind" && myRunway.runway == 36 )
 
                 if ( (leg == "downwind" && myRunway.runway == 18 ) || (leg == "abeam" && myRunway.runway == 18 ) || (myRunway.runway == 29 && leg == "base") || (leg == "45" && myRunway.runway == 29 ) || ( leg == "final" && myRunway.runway == 36 ) || ( leg == "upwind" && myRunway.runway == 36 )){
                     if ( ( leg == "final" && myRunway.runway == 36 ) && (deg > 0) || ( leg == "upwind" && myRunway.runway == 36 ) && (deg > 0) ){
@@ -1049,21 +1031,14 @@ public class airport {
             {
                 double v = accel(planeArray[0].x, planeArray[planeNum].prevX, planeArray[0].y, planeArray[planeNum].prevY, planeArray[0].velocity, planeArray[planeNum].velocity);
                 planeArray[0].velocity += v;
-                //System.out.println("collision correction: " + v);
             }
-            else
-                System.out.println("stall speed");
         }
         if((planeArray[0].collisionMethod == "none" && d < 1700 && d > 700 && planeArray[0].z > 200) )
         {
-            System.out.println("got here with plane: " + planeNum);
-            System.out.println("360");
             planeArray[0].collisionMethod = "start360";
         }
         if((d1 < 700 || d2 < 700))
         {
-            System.out.println("got here");
-            System.out.println("d1: " + d1 + " d2 " + d2);
             planeArray[0].collisionMethod = "ascend";
             planeArray[0].velocity += accel(planeArray[0].x, planeArray[planeNum].x, planeArray[0].y, planeArray[planeNum].y, planeArray[0].velocity, planeArray[0].Vx);
         }
@@ -1071,13 +1046,9 @@ public class airport {
         {
                 planeArray[0].collisionMethod = "none";
                 if(passed(planeArray[0], myrunway, legqueue))
-                {
-                    System.out.println("passed!!");
                     legqueue.dequeue();
-                }   
-                System.out.println("end ascend");
+
         }
-        //System.out.println("collision method: " + planeArray[0].collisionMethod);
     }
 
     public static double rateOfCollision(plane planeArray[], int planeNum)
@@ -1093,8 +1064,6 @@ public class airport {
              + Math.pow(planeArray[0].prevZ - planeArray[planeNum].prevZ, 2));
 
         rate = distance/prevDistance;
-        //System.out.println("distance " + planeNum + ": " + distance);
-        //System.out.println("rate of closure: " + rate);
 
         return rate;
     }
