@@ -98,6 +98,7 @@ else if passed the (runway leg) End point
   - find new point along next leg given distance overshot
   - dequeue to move onto next leg
   - increase Position
+  - adjust for wind
 
 """
 
@@ -146,16 +147,69 @@ repeat for each leg
 
 #### newPoint()
 A method to determine a new point a certain distance along a vector
-- vector end position - start position
-- calculate norm
-- new position is (distance to go * (vector/norm)) + start position
-- update plane position
+1. Vector = End position - Start position
+2. Calculate the norm
+3. New Position = distance to go * (vector / norm ) + start position
+
+Compare new position to start position to calculate unit heading vector
+
+4. Heading Vector = New Position - Start position
+5. Calculate the norm
+6. Unit Vector Heading = Heading Vector / norm
+
+Calculate Unit Vector for Wind
+
+7. X: Wind speed * cos (Wind Direction) + start position
+8. Y: Wind speed * sin (Wind Direction) + start position
+9. Calculate norm
+10. Unit Vector = Vector / Norm
+
+New Position = (Unit Heading Vector * Velocity) + (Unit Wind Vector * Wind Speed) + Start Position
+
 
 #### accel()
 A method to calculate acceleration needed based on position, end of vector, and velocity desired at end of vector
 - distance formula used to calculate distacne to end of vector
 - velocity equation: final velocity squared = initial velocity squared + 2 * acceleration * distance
 - given intial velocity and distance to end of vector, return acceleration
+
+## Wind Correction
+
+1. Calculate the difference between actual heading and expected heading
+
+2. Previous point is calculated
+    - Opposite Wind Direction
+    - Opposite Heading Direction
+
+3. Perform Wind Correction
+    - Apply a force opposite the wind
+    - The greater the difference, the greater the ratio
+    - 3 ratios
+    - Range of values
+
+4. Calculate the new heading using the Wind-Corrected-Point and the Previous point
+
+5. New Heading is stored
+
+## Collision Avoidance
+
+The goal is not to get in front of obstacle, but to stay a safe distance behind. Three different collision avoidance tactics 
+- Accelerate
+- Make a 360 degree turn
+- Ascend to avoid immediate collision
+
+Two other planes are in the pattern: one slower in front and one faster behind
+Plane class string: “collision method”
+Before new point, check collision method
+
+#### 1. Accelerate 
+First, the program measures the rate at which the UAV is overtaking or being overtaken by another plane. This is done by comparing the current distance between each plane and the previou distance between each plane. The rate is calculated by the current distance / previous distance. If this rate is less than 1 but greater than .9, the UAV will accelerate accordingly. This acceleration is calculated using the accel() method detailed in section 3.4. The current point is the UAV’s position, and the end point is the other plane’s previous coordinates and previous velocity. Thus, the UAV slows down for the slower aircraft in front and speeds up for the aircraft behind, as well as still hitting its target velocities at each essential point in the pattern. While this method is effective for keeping distance between aircraft as long as possible, it is not a conclusive solution for collision avoidance.
+
+#### 2. Make a 360 Degree Turn 
+This maneuver was chosen for collision avoidance because it is a typical maneuver performed in a traffic pattern to buy more time for slower aircraft. Not only does this maneuver create space for aircraft ahead of the UAV, but also allows fast aircraft behind to safely pass the UAV without a collision. This maneuver is performed if the distance between the UAV and any plane falls between 700 and 1700 feet. This maneuever will not occur within 200 feet of the ground, however, as performing a 360 that low would certainly be dangerous. The maneuver is broken into two parts: ”start360” and ”360” to prevent the UAV from spiraling continuously. ”Start360” establishes the center of the circle as a counterclockwise rotation 270 degrees in the < y, −x > direction and scales the radius to 500, making the circle have a diameter of 1000 feet. This direction was chosen to keep the circle on the outer edge of the pattern. The angle a indicates the direction in which the arc leaves the current point, and is calculated by calling the atan2() method from the Math class on the (x, y) coordinate found by subtracting the center coordinates from the current x and y position. Each clock pulse, the UAV velocity/radius is subtracted from a, ensuring an arc length of the velocity traveled in one clock pulse. Once the angle is less than 2pi, the collision method string is set to ”none” and the UAV breaks out of the 360.
+#### 3. Ascend 
+This maneuver is reserved for when the distance between the UAV and another aircraft falls below 700 feet. This means that an immediate collision is likely, so the aircraft ascends to avoid the other aircraft. When ascending. a plane pitches to Vx, its best angle of climb speed, which gives it the greatest altitude gain for a certain distance.
+
          
 
 ## Installation Process of GNUPLOT 
