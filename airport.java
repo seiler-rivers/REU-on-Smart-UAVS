@@ -1047,7 +1047,6 @@ public class airport {
                 planeArray[0].collisionMethod = "none";
                 if(passed(planeArray[0], myrunway, legqueue))
                     legqueue.dequeue();
-
         }
     }
 
