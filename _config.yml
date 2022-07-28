@@ -2,3 +2,7 @@ theme: jekyll-theme-cayman
 title: 3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
 authors: Seiler Rivers and Andrea Coppi
 description: Auburn REU on Smart UAVs 2022
+
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+- jekyll-remote-theme # add this line to the plugins list if you already have one
