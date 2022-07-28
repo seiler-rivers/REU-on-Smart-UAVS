@@ -5,10 +5,6 @@
 
 
 
-<img width="444" alt="Final Graph Top view" src="[[Final_top_view.png]](https://raw.githubusercontent.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/main/Final_top_view.png)"
-
-
-
 
 
 ## Program Specification and Outline of Classes 
