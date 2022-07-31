@@ -1,12 +1,10 @@
 # UAV Collision Avoidance Tactics in an Uncontrolled Airport Traffic Pattern
 
 
-![](UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/images/Final_side_view.png)
-
-
 ## Problem Description:
-  The goal of this project is to create a 3D simulation of a UAV landing at an uncontrolled (non-towered) airport. Four (4) Traffic paths are created based on the two (2) runways at Auburn University Regional Airport, and a 3D flight simulation is conducted based on Cessna 172 flight performance. The UAV flies the correct path given a runway, avoids collision with other aircraft, and adjusts for wind displacement in-flight.
+  The goal of this project is to create a 3D simulation of a UAV landing at an uncontrolled (non-towered) airport. Four (4) Traffic paths are created based on the two (2) runways at Auburn University Regional Airport, and a 3D flight simulation is conducted based on Cessna 172 flight performance. The UAV flies the correct path given a runway, avoids collision with other aircraft, and adjusts for wind displacement in-flight. The images below depict the finished traffic pattern.
 
+<img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/Final_side_view.png" width="375" height="312.5" /> <img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/Final_top_view.png" width="375" height="312.5" />
 
 
 ## Program Specification and Outline of Classes 
@@ -196,6 +194,10 @@ A method to calculate acceleration needed based on position, end of vector, and 
 4. Calculate the new heading using the Wind-Corrected-Point and the Previous point
 
 5. New Heading is stored
+
+The images below depict the traffic pattern before and after the wind correction algorithm is applied 
+
+<img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/Final_side_view.png" width="375" height="312.5" /> <img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/No_Wind_Correction.png" width="375" height="312.5" />
 
 ## Collision Avoidance
 
