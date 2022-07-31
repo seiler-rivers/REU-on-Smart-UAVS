@@ -1,6 +1,8 @@
 # 3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
 
 
+![](images/Final_top_view.png)
+
 ## Problem Description:
   The goal of this project is to create a 3D simulation of a UAV landing at an uncontrolled (non-towered) airport. Four (4) Traffic paths are created based on the two (2) runways at Auburn University Regional Airport, and a 3D flight simulation is conducted based on Cessna 172 flight performance. The UAV flies the correct path given a runway, avoids collision with other aircraft, and adjusts for wind displacement in-flight. The images below depict the finished traffic pattern.
 
