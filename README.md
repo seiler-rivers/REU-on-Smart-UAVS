@@ -1,4 +1,4 @@
-# UAV Collision Avoidance Tactics in an Uncontrolled Airport Traffic Pattern
+#3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
 
 
 ## Problem Description:
