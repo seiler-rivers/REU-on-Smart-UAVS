@@ -1,4 +1,4 @@
-#3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
+# 3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
 
 
 ## Problem Description:
