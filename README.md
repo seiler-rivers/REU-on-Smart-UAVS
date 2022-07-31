@@ -196,7 +196,7 @@ A method to calculate acceleration needed based on position, end of vector, and 
 
 The images below depict the traffic pattern before and after the wind correction algorithm is applied 
 
-<img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/No_Wind_Correction.png" width="375" height="312.5" /> <img src="https://github.com/seiler-rivers/UAV-Collision-Avoidance-Tactics-in-an-Uncontrolled-Airport-Traffic-Pattern-/blob/main/images/Final_top_view.png" width="375" height="312.5" />
+<img width="444" alt=" no wind correction " src="https://raw.githubusercontent.com/seiler-rivers/UAV-CAS-Uncontrolled-Airport/main/images/No_Wind_Correction.png"> <img width="444" alt="with wind correction" src="https://raw.githubusercontent.com/seiler-rivers/UAV-CAS-Uncontrolled-Airport/main/images/Final_top_view.png">
 
 ## Collision Avoidance
 
