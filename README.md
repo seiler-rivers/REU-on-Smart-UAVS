@@ -1,5 +1,8 @@
 # 3D Collision Avoidance Simulation for a UAV Landing at a Non-Towered Airport
 
+This paper proposes a successful Collision Avoidance System for UAVs landing at an uncontrolled airport. This research was conducted at Auburn University as part of a National Science Foundation Research Experience for Undergraduates. 
+Modeled after a high-traffic, untowered airport in the southeastern United States, 4 traffic patterns according to standard general aviation practice are correctly flown by this simulation. Two other planes of varying speeds are implemented to test the collision avoidance system. The simulation also handles collision avoidance when multiple runways are in use at once, though this needs to be refined in future research. The UAV performs typical avoidance maneuvers such as accelerating to create distance between aircraft, performing a 360 degree turn, and ascending to avoid immediate impact. The UAV safely circles the pattern, lands, avoids other aircraft, and corrects for wind displacement.
+
 [Click here for final paper](https://drive.google.com/file/d/1OfJI3xVcrrpjsEOJ0-8qSd5jgjRFFvMY/view?usp=sharing)
 
 ## Problem Description:
